@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3  # Esta versão já é compatível com Node.js 20
       with:
         fetch-depth: 0
 
@@ -34,7 +34,7 @@ jobs:
     needs: unit-test
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3  # Atualizando para v3
       with:
         fetch-depth: 0
 
@@ -59,8 +59,8 @@ jobs:
 
     - name: Build and analyze
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn verify sonar:sonar \
         -Dsonar.projectKey=YOUR_PROJECT_KEY \
         -Dsonar.organization=YOUR_ORGANIZATION_KEY \
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: code-analisys
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3  # Atualizando para v3
       with:
         fetch-depth: 0
 
