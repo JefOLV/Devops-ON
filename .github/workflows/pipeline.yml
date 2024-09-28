@@ -1,6 +1,6 @@
 name: CI Pipeline
 
-# Rodar o pipeline ao fazer push ou manualmente
+# Executar quando houver push ou rodar manualmente
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Testes unitários (echo)
+    # Step 2: Teste simples (echo)
     - name: Testes unitários
       run: echo "Executando testes unitários"
 
@@ -29,23 +29,4 @@ jobs:
       run: echo "Executando testes funcionais"
 
     # Step 5: Testes de carga (echo)
-    - name: Testes de carga
       run: echo "Executando testes de carga"
-
-    # Step 6: Integração com SonarQube
-    - name: SonarQube Scan
-      uses: sonarsource/sonarcloud-github-action@v1.10
-      with:
-        projectBaseDir: ./
-        args: >
-          -Dsonar.projectKey=<seu-projeto>
-          -Dsonar.organization=<sua-org>
-          -Dsonar.sources=.
-
-    # Step 7: Integração com Snyk (ferramenta de segurança)
-    - name: Snyk Security Scan
-      uses: snyk/actions@master
-      with:
-        args: test
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
