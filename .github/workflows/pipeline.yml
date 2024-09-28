@@ -12,40 +12,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout do repositório
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # Step 2: Teste simples (echo)
-    - name: Testes unitários
-      run: echo "Executando testes unitários"
+      # Step 2: Teste simples (echo)
+      - name: Testes unitários
+        run: echo "Executando testes unitários"
 
-    # Step 3: Testes de integração (echo)
-    - name: Testes de integração
-      run: echo "Executando testes de integração"
+      # Step 3: Testes de integração (echo)
+      - name: Testes de integração
+        run: echo "Executando testes de integração"
 
-    # Step 4: Testes funcionais (echo)
-    - name: Testes funcionais
-      run: echo "Executando testes funcionais"
+      # Step 4: Testes funcionais (echo)
+      - name: Testes funcionais
+        run: echo "Executando testes funcionais"
 
-    # Step 5: Testes de carga (echo)
-    - name: Testes de carga
-      run: echo "Executando testes de carga"
+      # Step 5: Testes de carga (echo)
+      - name: Testes de carga
+        run: echo "Executando testes de carga"
 
-    # Step 6: Integração com SonarQube
-- name: SonarQube Scan
-  uses: sonarsource/sonarcloud-github-action@v1.12
-  with:
-    projectBaseDir: ./
-    args: >
-      -Dsonar.projectKey=<seu-projeto>
-      -Dsonar.organization=<sua-org>
-      -Dsonar.sources=.
+      # Step 6: Integração com SonarQube
+      - name: SonarQube Scan
+        uses: sonarsource/sonarcloud-github-action@v1.12
+        with:
+          projectBaseDir: ./
+          args: >
+            -Dsonar.projectKey=<seu-projeto>
+            -Dsonar.organization=<sua-org>
+            -Dsonar.sources=.
 
-    # Step 7: Integração com Snyk
-    - name: Snyk Security Scan
-      uses: snyk/actions@master
-      with:
-        args: test
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # Step 7: Integração com Snyk
+      - name: Snyk Security Scan
+        uses: snyk/actions@master
+        with:
+          args: test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
