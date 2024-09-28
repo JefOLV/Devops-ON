@@ -31,14 +31,14 @@ jobs:
       - name: Run load tests
         run: echo "Running load tests"
 
-      # Step 6: SonarQube Scan
+           # Step 6: SonarQube Scan
       - name: SonarQube Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
           projectBaseDir: ./
           args: >
-            -Dsonar.projectKey=<devops>
-            -Dsonar.organization=<impacta>
+            -Dsonar.projectKey=devops
+            -Dsonar.organization=impacta
             -Dsonar.sources=.
 
       # Step 7: Snyk Security Scan
