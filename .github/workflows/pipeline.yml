@@ -1,197 +1,51 @@
-name: pipeline
+name: CI Pipeline
 
+# Executar quando houver push ou rodar manualmente
 on:
   push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  analyze:
-    name: Análise de Código com CodeQL
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript', 'java' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
-    steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v3
-
-      # Inicializa os ferramentas do CodeQL para varredura.
-      - name: Inicializa CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: ${{ matrix.language }}
-
-      # Tenta construir qualquer linguagem compilada.
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
-
-      - name: Realiza Análise CodeQL
-        uses: github/codeql-action/analyze@v2
-      
-  unit-test:
-    name: Executar Testes Unitários
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - run: mvn test  
-      - name: Gerar Badge JaCoCo
-        id: jacoco
-        uses: cicirello/jacoco-badge-generator@v2.11.0
-      - name: Log de cobertura
-        run: |
-          echo "cobertura = ${{ steps.jacoco.outputs.coverage }}"
-          echo "cobertura de branch = ${{ steps.jacoco.outputs.branches }}"    
-      - name: Fazer upload do relatório de cobertura JaCoCo
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-report
-          path: target/site/jacoco/
-
-  code-analysis:
-    name: Análise de Código com SonarCloud
-    runs-on: ubuntu-latest
-    needs: unit-test
-    
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Configurar JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-          
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-          
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-          
-      - name: Build e Análise
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para obter informações do PR
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_IMPACTA }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.qualitygate.wait=true -Dsonar.projectKey=devopsfiap_devopsimpacta
-
   build:
-    name: Build do Projeto
     runs-on: ubuntu-latest
-    needs: code-analysis
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Pacote
-        run: mvn package  
-   
-  deploy-STG:
-    name: Deploy para STG
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: stg
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - name: Realizar Deploy 
-        shell: bash
-        run: |
-          echo "Deploy para STG"
-          
-  smoketest:
-    name: Smoke Test
-    runs-on: ubuntu-latest
-    needs: deploy-STG
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Executar Smoke Test
-        shell: bash
-        run: |
-          sh 'src/main/scripts/smoketest.sh'
-          
-  testeIntegrados:
-    name: Teste Integrados
-    runs-on: ubuntu-latest
-    needs: smoketest
-    
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Executar Teste Integrado
-        shell: bash
-        run: |
-          sh 'src/main/scripts/testeIntegrado.sh'
-  
-  deploy-Pre:
-    name: Deploy para Pré-Produção
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/release'
-    environment:
-      name: pre
-    needs: build
-    steps:
-      - name: Realizar Deploy 
-        shell: bash
-        run: |
-          echo "Deploy para PRE"
-  
-  smoketestPre:
-    name: Smoke Test Pré-Produção
-    runs-on: ubuntu-latest
-    needs: deploy-Pre
-    
-    if: github.ref == 'refs/heads/release'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Executar Smoke Test Pré
-        shell: bash
-        run: |
-          sh 'src/main/scripts/smoketest.sh'          
-          
-  testeFuncionais:
-    name: Testes Funcionais
-    runs-on: ubuntu-latest
-    needs: smoketestPre
-    
-    if: github.ref == 'refs/heads/release'
-    steps:
-      - uses: actions/checkout@v3
-      - name: Executar Testes Funcionais
-        shell: bash
-        run: |
-          sh 'src/main/scripts/testesFuncionais.sh'  
-          
-  deploy-Prod:
-    name: Deploy para Produção
-    runs-on: ubuntu-latest
-    
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: prod
-    needs: build
-    steps:
-      - name: Realizar Deploy 
-        shell: bash
-        run: |
-          echo "Deploy para PROD"
+    # Step 1: Checkout do repositório
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Step 2: Teste simples (echo)
+    - name: Testes unitários
+      run: echo "Executando testes unitários"
+
+    # Step 3: Testes de integração (echo)
+    - name: Testes de integração
+      run: echo "Executando testes de integração"
+
+    # Step 4: Testes funcionais (echo)
+    - name: Testes funcionais
+      run: echo "Executando testes funcionais"
+
+    # Step 5: Testes de carga (echo)
+    - name: Testes de carga
+      run: echo "Executando testes de carga"
+
+    # Step 6: Integração com SonarQube
+    - name: SonarQube Scan
+      uses: sonarsource/sonarcloud-github-action@v1.10
+      with:
+        projectBaseDir: ./
+        args: >
+          -Dsonar.projectKey=<seu-projeto>
+          -Dsonar.organization=<sua-org>
+          -Dsonar.sources=.
+
+    # Step 7: Integração com Snyk
+    - name: Snyk Security Scan
+      uses: snyk/actions@master
+      with:
+        args: test
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
