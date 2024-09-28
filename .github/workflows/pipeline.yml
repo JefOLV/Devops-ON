@@ -33,3 +33,23 @@ jobs:
 git add .
 git commit -m "Adicionar pipeline básico"
 git push
+
+# Step 6: Integração com SonarQube
+- name: SonarQube Scan
+  uses: sonarsource/sonarcloud-github-action@v1.10
+  with:
+    projectBaseDir: ./
+    args: >
+      -Dsonar.projectKey=<Devops-on>
+      -Dsonar.organization=<impacta>
+      -Dsonar.sources=.
+      
+      # Step 7: Integração com Snyk
+- name: Snyk Security Scan
+  uses: snyk/actions@master
+  with:
+    args: test
+  env:
+    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
