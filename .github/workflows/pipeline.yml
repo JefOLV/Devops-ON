@@ -1,6 +1,5 @@
 name: CI Pipeline
 
-# Executar quando houver push ou rodar manualmente
 on:
   push:
     branches:
@@ -12,27 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout do repositório
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Teste simples (echo)
-      - name: Testes unitários
-        run: echo "Executando testes unitários"
+      # Step 2: Run unit tests
+      - name: Run unit tests
+        run: echo "Running unit tests"
 
-      # Step 3: Testes de integração (echo)
-      - name: Testes de integração
-        run: echo "Executando testes de integração"
+      # Step 3: Run integration tests
+      - name: Run integration tests
+        run: echo "Running integration tests"
 
-      # Step 4: Testes funcionais (echo)
-      - name: Testes funcionais
-        run: echo "Executando testes funcionais"
+      # Step 4: Run functional tests
+      - name: Run functional tests
+        run: echo "Running functional tests"
 
-      # Step 5: Testes de carga (echo)
-      - name: Testes de carga
-        run: echo "Executando testes de carga"
+      # Step 5: Run load tests
+      - name: Run load tests
+        run: echo "Running load tests"
 
-      # Step 6: Integração com SonarQube
+      # Step 6: SonarQube Scan
       - name: SonarQube Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -42,7 +41,7 @@ jobs:
             -Dsonar.organization=<impacta>
             -Dsonar.sources=.
 
-      # Step 7: Integração com Snyk
+      # Step 7: Snyk Security Scan
       - name: Snyk Security Scan
         uses: snyk/actions@master
         with:
