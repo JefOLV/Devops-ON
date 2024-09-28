@@ -33,14 +33,14 @@ jobs:
       run: echo "Executando testes de carga"
 
     # Step 6: Integração com SonarQube
-    - name: SonarQube Scan
-      uses: sonarsource/sonarcloud-github-action@v1.10
-      with:
-        projectBaseDir: ./
-        args: >
-          -Dsonar.projectKey=<devops-on>
-          -Dsonar.organization=<impacta>
-          -Dsonar.sources=.
+- name: SonarQube Scan
+  uses: sonarsource/sonarcloud-github-action@v1.12
+  with:
+    projectBaseDir: ./
+    args: >
+      -Dsonar.projectKey=<seu-projeto>
+      -Dsonar.organization=<sua-org>
+      -Dsonar.sources=.
 
     # Step 7: Integração com Snyk
     - name: Snyk Security Scan
