@@ -38,8 +38,8 @@ jobs:
         with:
           projectBaseDir: ./
           args: >
-            -Dsonar.projectKey=<seu-projeto>
-            -Dsonar.organization=<sua-org>
+            -Dsonar.projectKey=<devops>
+            -Dsonar.organization=<impacta>
             -Dsonar.sources=.
 
       # Step 7: Integração com Snyk
