@@ -30,3 +30,6 @@ jobs:
 
     # Step 5: Testes de carga (echo)
       run: echo "Executando testes de carga"
+git add .
+git commit -m "Adicionar pipeline básico"
+git push
