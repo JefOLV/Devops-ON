@@ -1,51 +1,16 @@
-name: CI Pipeline
-
-# Executar quando houver push ou rodar manualmente
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-    # Step 1: Checkout do repositório
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    # Step 2: Teste simples (echo)
-    - name: Testes unitários
-      run: echo "Executando testes unitários"
-
-    # Step 3: Testes de integração (echo)
-    - name: Testes de integração
-      run: echo "Executando testes de integração"
-
-    # Step 4: Testes funcionais (echo)
-    - name: Testes funcionais
-      run: echo "Executando testes funcionais"
-
-    # Step 5: Testes de carga (echo)
-    - name: Testes de carga
-      run: echo "Executando testes de carga"
-
-    # Step 6: Integração com SonarQube
-    - name: SonarQube Scan
-      uses: sonarsource/sonarcloud-github-action@v1.10
-      with:
-        projectBaseDir: ./
-        args: >
-          -Dsonar.projectKey=<seu-projeto>
-          -Dsonar.organization=<sua-org>
-          -Dsonar.sources=.
-
-    # Step 7: Integração com Snyk
-    - name: Snyk Security Scan
-      uses: snyk/actions@master
-      with:
-        args: test
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Snyk Security Scan
+        run: |
+          npm install snyk --save-dev
+          snyk test
+      - name: SonarCloud Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para autenticar no SonarCloud
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Adicione seu token do SonarCloud aqui
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=devopsfiap_devopsimpacta \
+          -Dsonar.organization=your-organization-key
