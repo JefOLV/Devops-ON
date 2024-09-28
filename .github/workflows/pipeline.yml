@@ -52,7 +52,7 @@ jobs:
           echo "cobertura = ${{ steps.jacoco.outputs.coverage }}"
           echo "cobertura de branch = ${{ steps.jacoco.outputs.branches }}"    
       - name: Fazer upload do relatório de cobertura JaCoCo
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
           path: target/site/jacoco/
