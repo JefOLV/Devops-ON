@@ -41,7 +41,7 @@ jobs:
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 11 # Ajustado para JDK 11, se necessário
+        java-version: 11
 
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
@@ -60,8 +60,8 @@ jobs:
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Substitua pela chave correta do token do SonarCloud
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud
+      run: mvn verify sonar:sonar \
         -Dsonar.projectKey=YOUR_PROJECT_KEY \
         -Dsonar.organization=YOUR_ORGANIZATION_KEY \
         -Dsonar.host.url=https://sonarcloud.io \
@@ -76,7 +76,7 @@ jobs:
         fetch-depth: 0
 
     - name: Build with Maven
-      run: mvn -B package -DskipTests --file pom.xml
+      run: mvn package -DskipTests --file pom.xml
 
     - name: Display structure of downloaded files
       run: ls -R
@@ -89,5 +89,4 @@ jobs:
         path: ./target/demo-0.0.2.7-SNAPSHOT.jar
 
     - name: Package
-      run: mvn package  
-
+      run: mvn package
