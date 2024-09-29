@@ -29,7 +29,7 @@ jobs:
         name: jacoco-report
         path: target/site/jacoco/
 
-   code-analisys:
+  code-analisys:
     runs-on: ubuntu-latest
     needs: unit-test
 
@@ -67,10 +67,11 @@ jobs:
         -Dsonar.organization=YOUR_ORGANIZATION_KEY \
         -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.qualitygate.wait=true
-        
+
   build:
     runs-on: ubuntu-latest
     needs: code-analisys
+
     steps:
     - uses: actions/checkout@v3
       with:
@@ -91,4 +92,3 @@ jobs:
 
     - name: Package
       run: mvn package
-
